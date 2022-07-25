@@ -184,6 +184,7 @@
 
   .tree-root.tree-root--multi {
       display: flex;
+      flex-direction: row-reverse;
       align-items: baseline;
   }
 
