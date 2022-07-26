@@ -23,6 +23,10 @@
         height: 300px;
         background: #fff no-repeat url(/assets/img/loading.gif) center;
       }
+
+      .filter-field {
+        width: 45%;
+      }
     </style>
   </head>
   <body>
@@ -37,10 +41,18 @@
             <p>Overriding default structure of tree data</p>
           </div>
 
+          <div style="display: flex; justify-content: space-between;">
+            <input type="text" placeholder="Type to filter Available..." v-model="treeFilter0" class="filter-field">
+            <input type="text" placeholder="Type to filter Active..." v-model="treeFilter1" class="filter-field">
+          </div>
+          
+
           <div class="example-tree">
             <tree
               :data="treeData"
               :options="treeOptions3"
+              :filter="treeFilter0"
+              :filter2="treeFilter1"
             >
               <div class="tree-scope" slot-scope="{ node }">
                 - {{ node.text }} -
@@ -56,6 +68,8 @@
         el: '#app',
         data: () => ({
           /* example 3 */
+          treeFilter0: '',
+          treeFilter1: '',
           treeData: getTreeData2(),
           treeOptions3: {
             blockNewRootNodes: true,
@@ -99,12 +113,11 @@
       function getTreeData2() {
         return [
           {
-            id: 1,
+            id: 45645641,
             MY_TEXT: 'Available',
             OPTIONS: { expanded: true, draggable: false },
             KIDS: [
               { id: 10, MY_TEXT: 'Item 1', OPTIONS: { checked: true } },
-              { id: 20, MY_TEXT: 'Item 2'},
               { id: 30, MY_TEXT: 'Item 3' },
               { id: 40, MY_TEXT: 'Item 4', KIDS: [
                 { id: 41, MY_TEXT: 'Item 4.1', OPTIONS: { checked: true }  },
@@ -112,14 +125,16 @@
                 { id: 43, MY_TEXT: 'Item 4.3', OPTIONS: { checked: true }  },
                 { id: 44, MY_TEXT: 'Item 4.4', OPTIONS: { checked: true }  }
               ]},
-              { id: 50, MY_TEXT: 'Item 5' }
+              { id: 50, MY_TEXT: 'Hey 5' }
             ]
           },
           {
-            id: 2,
+            id: 23456345,
             MY_TEXT: 'Active',
             OPTIONS: { expanded: true, draggable: false },
-            KIDS: []
+            KIDS: [
+              { id: 20, MY_TEXT: 'Hey 2'},
+            ]
           },
         ]
       }

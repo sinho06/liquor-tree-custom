@@ -114,6 +114,7 @@
       },
 
       filter: String,
+      filter2: String,
 
       tag: {
         type: String,
@@ -131,6 +132,12 @@
         {},
         filterDefaults,
         opts.filter
+      )
+
+      opts.filter2 = Object.assign(
+        {},
+        filterDefaults,
+        opts.filter2
       )
 
       return {
@@ -158,7 +165,12 @@
     
     watch: {
       filter (term) {
-        this.tree.filter(term)
+        this.options.multiTree
+          ? this.tree.filterMultiTree(this.filter, this.filter2)
+          : this.tree.filter(term)
+      },
+      filter2 (term) {
+        this.tree.filterMultiTree(this.filter, this.filter2)
       }
     },
   }
@@ -184,7 +196,6 @@
 
   .tree-root.tree-root--multi {
       display: flex;
-      flex-direction: row-reverse;
       align-items: baseline;
   }
 

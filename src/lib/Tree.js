@@ -97,6 +97,68 @@ export default class Tree {
     this.vm.$emit('tree:filtered', [], '')
   }
 
+  filterMultiTree (...query) {
+    if (!query[0] && !query[1]) {
+      return this.clearFilter()
+    }
+
+    const matches = []
+    const predicate = this.options.filter.matcher
+
+    // collect nodes
+    let parentIdx = -1
+    this.recurseDown((node) => {
+      const isParent = node.parent === null
+      if (isParent) {
+        parentIdx +=1
+      }
+
+      if (isParent || predicate(query[parentIdx], node) || !query[parentIdx]) {
+        matches.push(node)
+      }
+
+      node.showChildren = true
+
+      // save prev `expanded` state
+      if (undefined === node.__expanded) {
+        node.__expanded = node.state('expanded')
+      }
+
+      node.state('visible', false)
+      node.state('matched', false)
+      node.state('expanded', true)
+    })
+
+    matches.reverse().forEach(node => {
+      node.state('matched', true)
+      node.state('visible', true)
+      node.state('expanded', true)
+
+      node.showChildren = true
+
+      if (node.hasChildren() && node.parent !== null) {
+        node.recurseDown(n => {
+          n.state('visible', true)
+        }, true)
+      }
+
+      node.recurseUp(parent => {
+        parent.state('visible', true)
+        parent.state('expanded', true)
+      })
+
+      if (node.hasChildren() && node.parent !== null) {
+        node.state('expanded', false)
+      }
+    })
+
+    this.vm.matches = matches
+
+    this.vm.$emit('tree:filtered', matches, query)
+
+    return matches
+  }
+
   filter (query) {
     if (!query) {
       return this.clearFilter()
